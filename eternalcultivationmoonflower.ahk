@@ -29,7 +29,7 @@ Loop
             
             Sleep, 10
         }
-        Sleep(200)
+        Sleep 200
         if (Count < 3)
         {
            
