@@ -29,7 +29,7 @@ Loop
             
             Sleep, 10
         }
-
+        Sleep(200)
         if (Count < 3)
         {
            
@@ -58,12 +58,15 @@ Loop
             Send, {o Up}
             
             Click, 720, 500
+            Click, 720, 500
+            Click, 720, 500
+            Click, 720, 500
             Sleep, 150
             Click, 720, 890
             Sleep, 150
             Send, m
             Send, {i Down}
-            Sleep, 1200
+            Sleep, 1600
             Send, {i up}
             Send, {S down}
             Result1 := 1
