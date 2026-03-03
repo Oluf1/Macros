@@ -1,73 +1,97 @@
+#Requires AutoHotkey v1.1
 #NoEnv
-ListLines Off
-Process, Priority, , High
+#Include Gdip_All.ahk
 SetBatchLines, -1
-SetMouseDelay, -1 
+ListLines, Off
+SetControlDelay, -1
+SetMouseDelay, -1
 SetDefaultMouseSpeed, 0
-CoordMode, Pixel, Screen
-CoordMode, Mouse, Screen
 
+if !pToken := Gdip_Startup() {
+    MsgBox, GDI+ Error
+    ExitApp
+}
+OnExit, ExitSub
 
-X1 := 700, Y1 := 340, X2 := 1200, Y2 := 900
-W := X2 - X1, H := Y2 - Y1
-Edge := 50
+centre_x := 950
+centre_y := 625
+radius := 325
+targetColor := 0x0087FF
+avoidColor := 0xFF0000
+tolerance := 10
 
-; Farbeinstellungen
-ColorBlue := 0x0087FF
-ColorRed := 0xFF0000  
-Tolerance := 18
+Points := []
+Loop 90 {
+    theta := 0.13962634 * (91 - A_Index)
+    Points[A_Index, "x"] := Round(centre_x + radius * Cos(theta))
+    Points[A_Index, "y"] := Round(centre_y + radius * Sin(theta))
+}
 
-ZoneOrder := [1, 2, 3, 4, 5, 6, 7, 8]
-Toggle := 0
+scanX := centre_x - radius - 10
+scanY := centre_y - radius - 10
+scanW := (radius * 2) + 20
+scanH := (radius * 2) + 20
+scanArea := scanX "|" scanY "|" scanW "|" scanH
 
-+::
-Toggle := !Toggle
-SetTimer, ColorLoop, % (Toggle ? 1 : "Off")
-return
-
-ColorLoop:
-FoundBlue := false
-
-Loop, 8 {
-    Z := ZoneOrder[A_Index]
-    
-    
-    if (Z = 1) 
-        PixelSearch, FX, FY, X1, Y1, X1+W/3, Y1+Edge, %ColorBlue%, %Tolerance%, Fast RGB
-    else if (Z = 2) 
-        PixelSearch, FX, FY, X1+W/3, Y1, X1+2*W/3, Y1+Edge, %ColorBlue%, %Tolerance%, Fast RGB
-    else if (Z = 3) 
-        PixelSearch, FX, FY, X1+2*W/3, Y1, X2, Y1+Edge, %ColorBlue%, %Tolerance%, Fast RGB
-    else if (Z = 4) 
-        PixelSearch, FX, FY, X2-Edge, Y1+Edge, X2, Y2-Edge, %ColorBlue%, %Tolerance%, Fast RGB
-    else if (Z = 5) 
-        PixelSearch, FX, FY, X1+2*W/3, Y2-Edge, X2, Y2, %ColorBlue%, %Tolerance%, Fast RGB
-    else if (Z = 6) 
-        PixelSearch, FX, FY, X1+W/3, Y2-Edge, X1+2*W/3, Y2, %ColorBlue%, %Tolerance%, Fast RGB
-    else if (Z = 7) 
-        PixelSearch, FX, FY, X1, Y2-Edge, X1+W/3, Y2, %ColorBlue%, %Tolerance%, Fast RGB
-    else if (Z = 8) 
-        PixelSearch, FX, FY, X1, Y1+Edge, X1+Edge, Y2-Edge, %ColorBlue%, %Tolerance%, Fast RGB
-
-    if (ErrorLevel = 0) {
-        FoundBlue := true
-        LastIdx := A_Index
-        break
+F1::
+Loop 2 { 
+    Loop 90 {
+        x := Points[A_Index].x
+        y := Points[A_Index].y
+        MouseMove, %x%, %y%
+        Sleep 1 
     }
 }
 
-if (FoundBlue) {
-    
-    PixelSearch, , , FX-15, FY-15, FX+15, FY+15, %ColorRed%, 25, Fast RGB
-    
-    if (ErrorLevel != 0) {
+Loop {
+    pBitmap := Gdip_BitmapFromScreen(scanArea)
+    for index, pt in Points {
+        argb := Gdip_GetPixel(pBitmap, pt.x - scanX, pt.y - scanY)
+        rgb := argb & 0x00FFFFFF
         
-        MouseClick, left, %FX%, %FY%, 1, 0
-        
-        
-        ClickedZone := ZoneOrder.RemoveAt(LastIdx)
-        ZoneOrder.Push(ClickedZone)
+        if (CheckColor(rgb, targetColor, tolerance)) {
+            isBlocked := false
+            
+            
+            Loop, 5 {
+                checkIndex := index + (A_Index - 3)
+                
+                
+                if (checkIndex < 1)
+                    checkIndex += 90
+                else if (checkIndex > 90)
+                    checkIndex -= 90
+                
+                targetPt := Points[checkIndex]
+                checkARGB := Gdip_GetPixel(pBitmap, targetPt.x - scanX, targetPt.y - scanY)
+                
+                if ((checkARGB & 0x00FFFFFF) == avoidColor) {
+                    isBlocked := true
+                    break
+                }
+            }
+            
+            if (!isBlocked) {
+                Click, % pt.x "," pt.y
+                Gdip_DisposeImage(pBitmap)
+                continue 2
+            }
+        }
     }
-    
+    Gdip_DisposeImage(pBitmap)
 }
 return
+
+CheckColor(c1, c2, tol) {
+    if (tol <= 0)
+        return (c1 == c2)
+    r1 := (c1 >> 16) & 0xFF, g1 := (c1 >> 8) & 0xFF, b1 := c1 & 0xFF
+    r2 := (c2 >> 16) & 0xFF, g2 := (c2 >> 8) & 0xFF, b2 := c2 & 0xFF
+    return (Abs(r1 - r2) <= tol && Abs(g1 - g2) <= tol && Abs(b1 - b2) <= tol)
+}
+
+ExitSub:
+Gdip_Shutdown(pToken)
+ExitApp
+
+Esc::ExitApp
