@@ -54,29 +54,26 @@ def scan_loop():
     with mss.mss() as sct:
         
         while not stop_event.is_set():
-            red = set()
+            red = [False] * len(Points)
+            blue = []
             img = sct.grab({"top": top, "left": left, "width": width, "height": height})
             arr = np.array(img)
             for i, (x, y) in enumerate(Points):
                 px = x - left
                 py = y - top
-                pixel_rgb = arr[py, px][:3]
+                b,g,r = map(int, arr[py, px][:3])
 
-                if color_match(pixel_rgb, (0,0,255), 10):
-                    red.add(i)
-            for i, (x, y) in enumerate(Points):
-                px = x - left
-                py = y - top
-                pixel_rgb = arr[py, px][:3]
-                if color_match(pixel_rgb, (255, 136, 0), 20):
-                    for offset in range(-3, 4):  
-                        check_index = (i + offset) % len(Points)
-                        if check_index in red:
-                            break
-                    else:
-                        pydirectinput.click(x,y)
-                        time.sleep(0.00001)
+                if abs(r-255) <= 10 and abs(g-0) <= 10 and abs(b-0) <= 10:
+                    red[i] = True
+                elif abs(r-0) <= 20 and abs(g-135) <= 20 and abs(b-255) <= 20:
+                    blue.append((i,x,y))
+            for i, x, y in blue:
+                for offset in range(-7, 9):
+                    if red[(i + offset) % len(Points)]:
                         break
+                else:
+                    pydirectinput.click(x, y)
+                    break
                     
                 
                 
