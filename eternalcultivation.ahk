@@ -21,8 +21,8 @@ avoidColor := 0xFF0000
 tolerance := 10
 
 Points := []
-Loop 90 {
-    theta := 0.13962634 * (91 - A_Index)
+Loop 45 {
+    theta := 0.13962634 * (46 - A_Index)
     Points[A_Index, "x"] := Round(centre_x + radius * Cos(theta))
     Points[A_Index, "y"] := Round(centre_y + radius * Sin(theta))
 }
@@ -35,7 +35,7 @@ scanArea := scanX "|" scanY "|" scanW "|" scanH
 
 F1::
 Loop 2 { 
-    Loop 90 {
+    Loop 45 {
         x := Points[A_Index].x
         y := Points[A_Index].y
         MouseMove, %x%, %y%
@@ -52,27 +52,30 @@ Loop {
         if (CheckColor(rgb, targetColor, tolerance)) {
             isBlocked := false
             
-            
             Loop, 5 {
                 checkIndex := index + (A_Index - 3)
                 
-                
                 if (checkIndex < 1)
-                    checkIndex += 90
-                else if (checkIndex > 90)
-                    checkIndex -= 90
+                    checkIndex += 45
+                else if (checkIndex > 45)
+                    checkIndex -= 45
                 
-                targetPt := Points[checkIndex]
-                checkARGB := Gdip_GetPixel(pBitmap, targetPt.x - scanX, targetPt.y - scanY)
+                tX := Points[checkIndex].x
+                tY := Points[checkIndex].y
                 
-                if ((checkARGB & 0x00FFFFFF) == avoidColor) {
+                cARGB := Gdip_GetPixel(pBitmap, tX - scanX, tY - scanY)
+                cRGB := cARGB & 0x00FFFFFF
+                
+                if (CheckColor(cRGB, avoidColor, tolerance)) {
                     isBlocked := true
                     break
                 }
             }
             
             if (!isBlocked) {
-                Click, % pt.x "," pt.y
+                targetX := pt.x
+                targetY := pt.y
+                SendInput, {Click %targetX% %targetY%}
                 Gdip_DisposeImage(pBitmap)
                 continue 2
             }
