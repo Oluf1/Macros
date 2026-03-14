@@ -12,15 +12,23 @@ centre_x = 950
 centre_y = 625
 radius = 325
 n = 180
-stop_event = threading.Event()
+stop_event =threading.Event()
 
 Points = []
 xs, ys = [], []
 
+scale_x = 1
+scale_y = 1
+with mss.mss() as sct:
+    monitor = sct.monitors[1]   
+    width = monitor["width"]
+    height = monitor["height"]
+    scale_x =width / 1920   #divides by original width to find the scale
+    scale_y = height / 1200 #divides by original height to find the scale
 for i in range(n):
     theta = (n - i) * (2 * math.pi / n)
-    x = round(centre_x + radius * math.cos(theta))
-    y = round(centre_y + radius * math.sin(theta))
+    x = round(scale_x(centre_x + radius * math.cos(theta)))
+    y = round(scale_y(centre_y + radius * math.sin(theta)))
     Points.append((x, y))
     xs.append(x)
     ys.append(y)
@@ -81,7 +89,7 @@ def scan_loop():
                     
 
             
-keyboard.add_hotkey("f1", lambda: threading.Thread(target=scan_loop, daemon=True).start())
+keyboard.add_hotkey("=", lambda: threading.Thread(target=scan_loop, daemon=True).start())
 keyboard.add_hotkey("esc", stop_script)
 print("ready")
 keyboard.wait()
