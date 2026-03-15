@@ -40,11 +40,12 @@ top = min(ys)
 width = max(xs) - left + 1
 height = max(ys) - top + 1
 
-
 def stop_script():
     print("Stopping...")
     stop_event.set()
-    
+
+
+
 def scan_loop():
     stop_event.clear()
     
@@ -72,14 +73,16 @@ def scan_loop():
                     red[i] = True
                 elif abs(r-0) <= 20 and abs(g-135) <= 20 and abs(b-255) <= 20:
                     blue.append((i,x,y))
+
             for i, x, y in blue:
-                for offset in range(-7, 9):
+                for offset in range(-7, 12):
                     if red[(i + offset) % len(Points)]:
+                        print("broken")                            
                         break
                 else:
                     pydirectinput.click(x, y)
                     break
-                    
+            
                 
                 
                     
