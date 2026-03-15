@@ -27,8 +27,8 @@ with mss.mss() as sct:
     scale_y = height / 1200 #divides by original height to find the scale
 for i in range(n):
     theta = (n - i) * (2 * math.pi / n)
-    x = round(scale_x(centre_x + radius * math.cos(theta)))
-    y = round(scale_y(centre_y + radius * math.sin(theta)))
+    x = round(scale_x*(centre_x + radius * math.cos(theta)))
+    y = round(scale_y*(centre_y + radius * math.sin(theta)))
     Points.append((x, y))
     xs.append(x)
     ys.append(y)
@@ -39,9 +39,6 @@ left = min(xs)
 top = min(ys)
 width = max(xs) - left + 1
 height = max(ys) - top + 1
-
-def color_match(rgb, target, tol):
-    return all(abs(int(c) - t) <= tol for c, t in zip(rgb, target))
 
 
 def stop_script():
