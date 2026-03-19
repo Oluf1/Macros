@@ -5,6 +5,8 @@ import numpy as np
 import ctypes
 import keyboard
 import cv2
+import pytesseract
+
 def make_recepies(Name:str,priority:int,Herbs:list[str])-> dict:
     return {
         "Name":Name,
