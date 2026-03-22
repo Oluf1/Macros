@@ -18,6 +18,8 @@ Loop
         PixelSearch, Px, Py, 1800, 1150, 2200, 1400, 0x716B9C, 5, Fast RGB
         if (ErrorLevel != 0)
             PixelSearch, Px, Py, 1800, 1150, 2200, 1400, 0x56579B, 5, Fast RGB
+        if (ErrorLevel !=0)
+            PixelSearch, Px, Py, 1800, 1150, 2200, 1400, 0x5A599A, 5, Fast RGB5
 
         if (ErrorLevel = 0)
             FoundCount++
@@ -41,13 +43,15 @@ Loop
 
             PixelSearch, Px, Py, 1800, 1150, 2200, 1400, 0x56579B, 3, Fast RGB
             found2 := (ErrorLevel = 0)
+            PixelSearch, Px, Py, 1800, 1150, 2200, 1400, 0x5A599A, 5, Fast RGB5
+            found3:= (ErrorLevel = 0)
             Tooltip % "F1:" found1 " F2:" found2 " Count:" FoundCount
-            if (!found1 && !found2)
+            if (!found1 && !found2 && !found3)
                 FoundCount++
 
             if (FoundCount = 5)
                 break
-            if (A_TickCount - StartTime >= 1800):
+            if (A_TickCount - StartTime >= 18000)
                 continue 2
             Sleep, 50
         }
@@ -60,17 +64,18 @@ Loop
         Sleep 100
         Loop
         {
-            PixelSearch, Px, Py, 1915, 911, 1950, 950, 0x716B9C, 9, Fast RGB
+            PixelSearch, Px, Py, 1915, 911, 1950, 950, 0x716B9C, 5, Fast RGB
             if (ErrorLevel != 0)
                 PixelSearch, Px, Py, 1915, 911, 1950, 950, 0x56579B, 5, Fast RGB
-
+            if (ErrorLevel != 0)
+                PixelSearch, Px, Py, 1915, 911, 1950, 950, 0x5A599A, 5, Fast RGB
             if (ErrorLevel = 0)
                 FoundCount ++
             else
                 FoundCount := 0
             if (FoundCount = 5)
                 break
-            if (A_TickCount - StartTime >= 1800):
+            if (A_TickCount - StartTime >= 18000)
                 continue 2
             Sleep, 50
         }
@@ -81,14 +86,15 @@ Loop
             PixelSearch, Px, Py, 1880, 904, 1950, 950, 0x716B9C, 9, Fast RGB
             if (ErrorLevel = 0)
                 PixelSearch, Px, Py, 1800, 1100, 2200, 1400, 0x56579B, 9, Fast RGB
-
+            if (ErrorLevel != 0)
+                PixelSearch, Px, Py, 1915, 911, 1950, 950, 0x5A599A, 5, Fast RGB
             if (ErrorLevel != 0)
                 FoundCount ++
             else
                 FoundCount := 0
             if (FoundCount = 5)
                 break
-            if (A_TickCount - StartTime >= 1800):
+            if (A_TickCount - StartTime >= 18000)
                 continue 2
             Sleep, 50
         }
