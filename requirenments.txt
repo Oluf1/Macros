@@ -2,6 +2,6 @@ mss
 numpy
 keyboard
 pydirectinput
-opencv
+opencv-python
 pytesseract
 ctypes
