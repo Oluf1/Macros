@@ -1,14 +1,17 @@
 ﻿#MaxThreadsPerHotkey 2
-CoordMode, Pixel, Screen
-CoordMode, Mouse, Screen
-
-=::
+F1::
 Toggle := !Toggle
-Flower2start := A_TickCount
-First :=0
+
+Count := 0
+Walktime := 0
+Regen_Time := 17000 + 150
+LastPickupTime := 0
+
 Loop
 {
-    if not Toggle
+    if (!Toggle)
+    {
+        Send, {W up}{S up}
         break
 
     FoundCount := 0
@@ -18,8 +21,6 @@ Loop
         PixelSearch, Px, Py, 1800, 1150, 2200, 1400, 0x716B9C, 5, Fast RGB
         if (ErrorLevel != 0)
             PixelSearch, Px, Py, 1800, 1150, 2200, 1400, 0x56579B, 5, Fast RGB
-        if (ErrorLevel !=0)
-            PixelSearch, Px, Py, 1800, 1150, 2200, 1400, 0x5A599A, 5, Fast RGB5
 
         if (ErrorLevel = 0)
             FoundCount++
@@ -30,13 +31,11 @@ Loop
 
     if (FoundCount = 5)
     {
-        
-        FoundCount := 0
-        StartTime := A_TickCount 
-        
-        Send, {e down}
-        
-        Loop
+        Count++
+        Send, e
+        LastPickupTime := A_TickCount
+
+        while (Result1 = 0 Or Result2 = 0)
         {
             PixelSearch, Px, Py, 1800, 1150, 2200, 1400, 0x716B9C, 5, Fast RGB
             found1 := (ErrorLevel = 0)
@@ -116,8 +115,8 @@ Loop
         Send, m 
         Sleep, 500
     }
-    
-    Sleep, 50 
+
+    Sleep, 50
 }
 return
 
