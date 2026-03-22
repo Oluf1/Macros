@@ -8,7 +8,8 @@ try:
     import threading 
 except ImportError:
     print("please run this in cmd \n py -m pip install -r requirenments.txt")
-    
+    input("Press Enter to exit...")
+    exit()
 
 
 pydirectinput.PAUSE = 0
@@ -80,8 +81,7 @@ def scan_loop():
 
             for i, x, y in blue:
                 for offset in range(-7, 12):
-                    if red[(i + offset) % len(Points)]:
-                        print("broken")                            
+                    if red[(i + offset) % len(Points)]:                          
                         break
                 else:
                     pydirectinput.click(x, y)
