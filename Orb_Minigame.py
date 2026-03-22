@@ -7,7 +7,8 @@ try:
     import pydirectinput
     import threading 
 except:
-    print("please run py -m pip install requirenments.txt")
+    print("please run this in cmd \n py -m pip install -r requirenments.txt")
+    exit()
 
 
 pydirectinput.PAUSE = 0
