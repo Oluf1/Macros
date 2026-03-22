@@ -2,9 +2,8 @@ try :
     import cv2
     import numpy as np
     import os
-except:
+except ImportError:
     print("please run this in cmd \n py -m pip install -r requirenments.txt")
-    exit()
 
 folder = "Herb_imageFolder"
 

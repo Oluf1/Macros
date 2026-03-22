@@ -7,9 +7,8 @@ try:
     import keyboard
     import cv2
     import pytesseract
-except:
+except ImportError:
     print("please run this in cmd \n py -m pip install -r requirenments.txt")
-    exit()
 
 def make_recepies(Name:str,priority:int,Herbs:list[str])-> dict:
     return {

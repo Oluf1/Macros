@@ -6,9 +6,9 @@ try:
     import keyboard
     import pydirectinput
     import threading 
-except:
+except ImportError:
     print("please run this in cmd \n py -m pip install -r requirenments.txt")
-    exit()
+    
 
 
 pydirectinput.PAUSE = 0
