@@ -1,10 +1,13 @@
-import mss
-import numpy as np
-import time
-import math
-import keyboard
-import pydirectinput
-import threading 
+try:
+    import mss
+    import numpy as np
+    import time
+    import math
+    import keyboard
+    import pydirectinput
+    import threading 
+except:
+    print("please run py -m pip install requirenments.txt")
 
 
 pydirectinput.PAUSE = 0

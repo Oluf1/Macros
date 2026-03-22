@@ -1,11 +1,14 @@
 
 from imagematching import match_image
-import mss
-import numpy as np
-import ctypes
-import keyboard
-import cv2
-import pytesseract
+try:
+    import mss
+    import numpy as np
+    import ctypes
+    import keyboard
+    import cv2
+    import pytesseract
+except:
+    print("please run py in cmd \n -m pip install requirenments.txt  ")
 
 def make_recepies(Name:str,priority:int,Herbs:list[str])-> dict:
     return {

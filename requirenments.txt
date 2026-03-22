@@ -1,0 +1,7 @@
+mss
+numpy
+keyboard
+pydirectinput
+opencv
+pytesseract
+ctypes
