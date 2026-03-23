@@ -117,6 +117,7 @@ Loop
     }
 
     Sleep, 50
+    }
 }
 return
 

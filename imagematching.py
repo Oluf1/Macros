@@ -4,6 +4,8 @@ try :
     import os
 except ImportError:
     print("please run this in cmd \n py -m pip install -r requirenments.txt")
+    input("Press Enter to exit...")
+    exit()
 
 folder = "Herb_imageFolder"
 

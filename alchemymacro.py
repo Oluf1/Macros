@@ -9,6 +9,8 @@ try:
     import pytesseract
 except ImportError:
     print("please run this in cmd \n py -m pip install -r requirenments.txt")
+    input("Press Enter to exit...")
+    exit()
 
 def make_recepies(Name:str,priority:int,Herbs:list[str])-> dict:
     return {
